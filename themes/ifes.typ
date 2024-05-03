@@ -1,8 +1,8 @@
 #import "../logic.typ"
 #import "../utils/utils.typ"
 
-#let uni-short-title = state("uni-short-title", none)
-#let uni-short-author = state("uni-short-author", none)
+#let ifes-short-title = state("ifes-short-title", none)
+#let ifes-short-author = state("ifes-short-author", none)
 
 #let ifes-theme(
   aspect-ratio: "16-9",
@@ -19,8 +19,8 @@
   set text(size: 18pt, font: "Arial")
   show footnote.entry: set text(size: .6em)
 
-  uni-short-title.update(short-title)
-  uni-short-author.update(short-author)
+  ifes-short-title.update(short-title)
+  ifes-short-author.update(short-author)
 
   body
 }
@@ -96,7 +96,7 @@
     block(fill: silver, width: 100%, height: 18pt)[
       #grid(
         columns: (1fr, auto),
-        [*#uni-short-title.display() #h(.5em) -- #h(.5em) #uni-short-author.display()*],
+        [*#ifes-short-title.display() #h(.5em) -- #h(.5em) #ifes-short-author.display()*],
         pad(x: 2em,)[#grid(
           rows: (auto, 1fr),
           block(width: 100pt, height: 5pt, fill: rgb("#B1C91F"))[],
@@ -114,6 +114,11 @@
     header-ascent: 0em,
   )
 
+  show math.equation: eq => grid(
+    columns: (50pt, auto, 1fr),
+    [], eq, []
+  )
+
   logic.polylux-slide([
     #pad(x: 2em, y: 1em, [
       #align(center)[#text(size: 26pt, fill: rgb("#00519e"))[#title]]
@@ -122,4 +127,25 @@
     ])
   ])
 
+}
+
+#let outline-slide(
+  items,
+  match,
+  title: [],
+  handout-mode: false,
+) = {
+  if handout-mode == false {
+    slide(title: title)[
+      #logic.logical-slide.update(current => current - 1)
+      #items.map(item => {
+        let body = item.body
+        let indent = if item.level == 1 {0em} else {10pt}
+        let marker = if item.level == 1 [•] else [‣]
+        marker = if match.contains(body) {marker} else {text(fill: gray.lighten(50%))[#marker]}
+        let body = if match.contains(body) {body} else {text(fill: gray.lighten(50%))[#body]}
+        list(indent: indent, marker: marker, body)
+      }).join()
+    ]
+  }
 }
