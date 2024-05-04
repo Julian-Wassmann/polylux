@@ -19,6 +19,10 @@
   set text(size: 18pt, font: "Arial")
   show footnote.entry: set text(size: .6em)
 
+  show table.cell.where(y: 0): strong
+  show table: set text(size: 16pt) 
+  set table(inset: 8pt, align: center)
+
   ifes-short-title.update(short-title)
   ifes-short-author.update(short-author)
 
